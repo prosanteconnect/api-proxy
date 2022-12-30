@@ -48,6 +48,7 @@
 
         <fileSet>
             <directory>${basedir}</directory>
+            <outputDirectory>docs</outputDirectory>
             <includes>
                 <include>${icon}</include>
             </includes>

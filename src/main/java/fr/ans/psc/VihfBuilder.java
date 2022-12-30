@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2022 ANS (https://esante.gouv.fr)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,8 +56,7 @@ public class VihfBuilder {
     private String patientINS;
     private GenerateVIHFPolicyConfiguration configuration;
 
-    public VihfBuilder(UserInfos userInfos, String workSituationId, String patientINS,
-                       GenerateVIHFPolicyConfiguration configuration) {
+    public VihfBuilder(UserInfos userInfos, String workSituationId, String patientINS, GenerateVIHFPolicyConfiguration configuration) {
         this.userInfos = userInfos;
         this.workSituationId = workSituationId;
         this.patientINS = patientINS;
@@ -164,10 +163,7 @@ public class VihfBuilder {
         log.debug("setting attributes...");
         List<VihfRole> roles = new ArrayList<>();
         roles.add(getVihfRole(nosMap, exercicePro.getProfessionCode(), "professions"));
-        if (userInfos.getSubjectRefPro().getExercices().stream()
-                .anyMatch(practice ->
-                        practice.getProfessionCode().equals(DOCTOR_PROFESSION_CODE) ||
-                        practice.getProfessionCode().equals(PHARMACIST_PROFESSION_CODE))) {
+        if (userInfos.getSubjectRefPro().getExercices().stream().anyMatch(this::isDoctorOrPharmacist)) {
             roles.add(getVihfRole(nosMap, exercicePro.getExpertiseCode(), "specialites RPPS"));
         }
 
@@ -178,8 +174,7 @@ public class VihfBuilder {
         VihfPurposeOfUse purposeOfUse = new VihfPurposeOfUse("normal", "1.2.250.1.213.1.1.4.248",
                 "mode acces VIHF 2.0", "Accès normal");
 
-        return addCommonCodeAttribute(attributeBuilder, PURPOSE_OF_USE,
-                Collections.singletonList(purposeOfUse), "PurposeOfUse");
+        return addCommonCodeAttribute(attributeBuilder, PURPOSE_OF_USE, Collections.singletonList(purposeOfUse), "PurposeOfUse");
     }
 
     private VihfRole getVihfRole(Map<String, Concept> nosMap, String code, String codeSystemName) throws NosReferentialRetrievingException {
@@ -197,8 +192,8 @@ public class VihfBuilder {
     }
 
     @SuppressWarnings("unchecked")
-    private Attribute addCommonCodeAttribute(AttributeBuilder attributeBuilder, String attributeName, List<? extends CommonCode> commonCodeList,
-                                             String name) {
+    private Attribute addCommonCodeAttribute(AttributeBuilder attributeBuilder, String attributeName,
+                                             List<? extends CommonCode> commonCodeList, String name) {
         Attribute attributeGroup = attributeBuilder.buildObject();
         attributeGroup.setName(attributeName);
 
@@ -229,7 +224,11 @@ public class VihfBuilder {
             InputStream inputStream = new FileInputStream(nosFile);
             RetrieveValueSetResponse retrieveValueSetResponse = (RetrieveValueSetResponse) unmarshaller.unmarshal(inputStream);
 
-            retrieveValueSetResponse.getValueSet().getConceptList().getConcept().forEach(concept -> nosMap.put(concept.getCode(), concept));
+            retrieveValueSetResponse.getValueSet().getConceptList().getConcept().forEach(concept -> {
+                if (!nosMap.containsKey(concept.getCode())) {
+                    nosMap.put(concept.getCode(), concept);
+                }
+            });
 
         } catch (JAXBException e) {
             log.error("JAXB exception occurred when unmarshalling NOS referential", e);
@@ -244,13 +243,19 @@ public class VihfBuilder {
     private Practice getExercicePro(List<Practice> exercices, String workSituationKey) throws WrongWorkSituationKeyException {
         try {
             return exercices.size() > 1 ?
-                    exercices.stream().filter(practice ->
-                            workSituationKey.equals(practice.getProfessionCode() + practice.getProfessionalCategoryCode())).findFirst().get() :
+                    exercices.stream().filter(practice -> workSituationKey.equals(
+                            practice.getProfessionCode() + practice.getProfessionalCategoryCode()
+                    )).findFirst().get() :
                     exercices.get(0);
         } catch (NoSuchElementException e) {
             throw new WrongWorkSituationKeyException("Wrong WorkSituationKey : practice designed by " + workSituationKey + " key submitted in request but absent in UserInfos", e);
         }
 
+    }
+
+    private boolean isDoctorOrPharmacist(Practice practice) {
+        return (practice.getProfessionCode().equals(DOCTOR_PROFESSION_CODE) ||
+                practice.getProfessionCode().equals(PHARMACIST_PROFESSION_CODE));
     }
 
 }

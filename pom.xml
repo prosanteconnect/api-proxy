@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2022 ANS (https://esante.gouv.fr)
+    Copyright (C) 2022-2023 Agence du Numérique en Santé (ANS) (https://esante.gouv.fr)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
     <name>ANS - Gravitee Policy - GenerateVIHF</name>
     <description>Gravitee Policy for VIHF token generation</description>
     <url>https://github.com/prosanteconnect/api-proxy</url>
-    <inceptionYear>2022</inceptionYear>
+    <inceptionYear>2022-2023</inceptionYear>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -269,7 +269,7 @@
                 <configuration>
                     <header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>
                     <properties>
-                        <owner>ANS</owner>
+                        <owner>Agence du Numérique en Santé (ANS)</owner>
                         <email>https://esante.gouv.fr</email>
                     </properties>
                     <excludes>

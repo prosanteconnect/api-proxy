@@ -22,7 +22,7 @@
 
     <groupId>fr.ans.psc</groupId>
     <artifactId>api-proxy</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <name>ANS - Gravitee Policy - GenerateVIHF</name>
     <description>Gravitee Policy for VIHF token generation</description>

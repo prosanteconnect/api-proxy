@@ -113,12 +113,6 @@
         </dependency>
 
         <dependency>
-            <groupId>fr.ans.esignsante</groupId>
-            <artifactId>esignsante-java-client</artifactId>
-            <version>2.5.11</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml</artifactId>
             <version>${opensaml.version}</version>

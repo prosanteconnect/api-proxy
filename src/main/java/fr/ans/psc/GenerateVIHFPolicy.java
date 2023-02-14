@@ -17,14 +17,12 @@ package fr.ans.psc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import fr.ans.esignsante.model.ESignSanteSignatureReport;
 import fr.ans.psc.exception.GenericVihfException;
+import fr.ans.psc.model.esignsante.ESignSanteSignatureReport;
 import fr.ans.psc.model.prosanteconnect.UserInfos;
 import io.gravitee.common.http.HttpStatusCode;
 import io.gravitee.common.http.MediaType;
 import io.gravitee.gateway.api.ExecutionContext;
-import io.gravitee.gateway.api.Request;
-import io.gravitee.gateway.api.Response;
 import io.gravitee.gateway.api.buffer.Buffer;
 import io.gravitee.gateway.api.el.EvaluableRequest;
 import io.gravitee.gateway.api.http.HttpHeaders;
